@@ -58,17 +58,18 @@ git clone https://github.com/consuldemocracy/installer
 cd installer
 ```
 
-Create your local `hosts` file
+Create your local `hosts.yml` file
 
 ```
-cp hosts.example hosts
+cp hosts.yml.example hosts.yml
 ```
 
-Update your local `hosts` file with the remote server's ip address
+Update your local `hosts.yml` file with the remote servers and the role of each one.
 
-```
-remote-server-ip-address (maintain other default options)
-```
+- The servers in the `rails` group will have Consul installed
+- The server in the `db` group will have Postgresql installed
+- The server in the `nfs` group will have NFS server installed (to share storage folder between Consul instances)
+- The servers in the `nfs_client` group will mount storage from the NFS server.
 
 Run the ansible playbook
 

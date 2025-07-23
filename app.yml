@@ -1,6 +1,6 @@
 ---
 - name: Set up web server
-  hosts: all
+  hosts: rails
   become: true
   vars:
     ansible_user: "{{ deploy_user }}"
@@ -9,7 +9,7 @@
     - nginx
 
 - name: Set up CONSUL DEMOCRACY
-  hosts: all
+  hosts: rails
   become: true
   become_user: "{{ deploy_user }}"
   vars:
@@ -25,7 +25,7 @@
     - puma
 
 - name: Post-installation tasks
-  hosts: all
+  hosts: rails
   become: true
   vars:
     ansible_user: "{{ deploy_user }}"
@@ -34,7 +34,7 @@
     - timezone
 
 - name: Install Errbit
-  hosts: all
+  hosts: rails
   become: true
   vars:
     ansible_user: "{{ deploy_user }}"
@@ -46,7 +46,7 @@
       when: errbit|bool
 
 - name: Check system
-  hosts: all
+  hosts: rails
   become: true
   vars:
     ansible_user: "{{ deploy_user }}"

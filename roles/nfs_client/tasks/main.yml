@@ -1,0 +1,16 @@
+---
+- name: Install nfs client
+  become: true
+  apt:
+    state: latest
+    name:
+      - nfs-common
+
+- name: Mount an NFS volume
+  become: true
+  ansible.posix.mount:
+    src: "{{ nfs_server }}:/var/nfs_export/storage"
+    path: "{{ shared_dir }}/storage"
+    opts: rw,sync,hard
+    state: mounted
+    fstype: nfs

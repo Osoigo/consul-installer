@@ -1,0 +1,27 @@
+---
+all:
+  vars:
+    ansible_user: root
+    storage_server: storage-server-ip-address
+  hosts:
+    pre1:
+      ansible_host: app1-server-ip-address
+    pre2:
+      ansible_host: app1-server-ip-address
+    predb:
+      ansible_host: storage-server-ip-address
+  children:
+    rails:
+      hosts:
+        pre1:
+        pre2:
+    db:
+      hosts:
+        predb:
+    nfs:
+      hosts:
+        predb:
+    nfs_client:
+      hosts:
+        pre1:
+        pre2:

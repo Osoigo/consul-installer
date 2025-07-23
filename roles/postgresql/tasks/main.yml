@@ -7,6 +7,26 @@
       - postgresql-contrib
       - python3-psycopg2
 
+- name: Set PostgreSQL listens address
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/postgresql/16/main/postgresql.conf
+    regexp: '^listen_addresses '
+    insertafter: '^#listen_addresses '
+    line: "listen_addresses = '{{ database_hostname }}'"
+
+- name: Set PostgreSQL authentication
+  become: true
+  community.postgresql.postgresql_pg_hba:
+    dest: /etc/postgresql/16/main/pg_hba.conf
+    contype: host
+    users: "{{ database_user }}"
+    databases: "{{ database_name }}"
+    method: scram-sha-256
+    source: all
+    keep_comments_at_rules: true
+    comment: "Remote access allowed"
+
 - name: Start Postgres
   become: true
   service:
@@ -39,7 +59,7 @@
     - name: Add PostgreSQL extensions
       postgresql_ext:
         name: "{{ item }}"
-        db: "{{database_name}}"
+        db: "{{ database_name }}"
         schema: shared_extensions
       with_items:
         - plpgsql

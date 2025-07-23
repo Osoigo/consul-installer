@@ -1,3 +1,4 @@
 *.retry
 /hosts
+/hosts.yml
 /consul
