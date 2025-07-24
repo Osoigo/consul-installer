@@ -15,6 +15,7 @@ env: production
 deploy_user: deploy
 deploy_group: wheel
 home_dir: "/home/{{ deploy_user }}"
+consul_repository: https://github.com/consuldemocracy/consuldemocracy.git
 consul_dir: "{{ home_dir }}/{{ app_name }}"
 shared_dir: "{{ consul_dir }}/shared"
 release_dir: "{{ consul_dir }}/current"
@@ -35,7 +36,7 @@ ansible_ssh_private_key_file: "~/.ssh/id_rsa"
 database_name: "{{app_name}}_{{ env }}"
 database_user: "{{ deploy_user }}"
 database_password: "{{ deploy_user }}"
-database_hostname: "localhost"
+database_hostname: "{{ storage_server | default('localhost') }}"
 
 # Puma
 # If you use Capistrano to deploy, make sure the puma_service_unit_name
@@ -69,3 +70,7 @@ errbit_domain: "errbit.{{ domain }}"
 errbit_service: "{{ app_name }}_errbit"
 errbit_user: "{{ deploy_user }}"
 errbit_group: "{{ deploy_group }}"
+
+
+# NFS
+nfs_server: "{{ storage_server }}"

@@ -2,8 +2,8 @@
 - name: Check that CONSUL DEMOCRACY exists
   stat:
     path: "{{ consul_dir }}"
-  register: consul_repo
 
+  register: consul_repo
 - name: Get current timestamp
   shell: "date -u +%Y%m%d%H%M%S"
   register: current_timestamp
@@ -13,8 +13,18 @@
   vars:
     first_release_dir: "{{ consul_dir }}/releases/{{ current_timestamp.stdout }}"
   block:
+    - name: Ensure correct permissions of consul directory
+      become: true
+      become_user: root
+      file:
+        path: "{{ consul_dir }}"
+        owner: "{{ deploy_user }}"
+        group: "{{ deploy_group }}"
+        mode: 0755
+        state: directory
+
     - name: Git clone CONSUL DEMOCRACY
-      shell: "git clone --mirror https://github.com/consuldemocracy/consuldemocracy.git {{ consul_dir }}/repo"
+      shell: "git clone --mirror {{ consul_repository }} {{ consul_dir }}/repo"
 
     - name: Create first release folder
       file:

@@ -1,0 +1,35 @@
+---
+- name: Install nfs server
+  become: true
+  apt:
+    state: latest
+    name:
+      - nfs-kernel-server
+
+- name: Create a shared directory
+  become: true
+  file:
+    path: /var/nfs_export/storage
+    state: directory
+    owner: 1001
+    group: 1001
+    mode: "0775"
+- name: Enable rpcbind nfslock nfs
+  become: true
+  service:
+    name: "{{ item }}"
+    enabled: true
+  with_items:
+    - rpcbind
+    - nfs-kernel-server
+- name: Set exports file
+  become: true
+  template:
+    src: "{{ playbook_dir }}/roles/nfs_server/templates/etc/exports.j2"
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: "0644"
+- name: NFS apply change configrue
+  become: true
+  shell: systemctl reload nfs-kernel-server;exportfs -a
